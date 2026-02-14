@@ -25,7 +25,7 @@ if (builder.Environment.IsDevelopment())
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() && Environment.GetEnvironmentVariable("SKIP_DB_INIT") != "true")
 {
     await app.InitialiseDatabaseAsync();
 }
