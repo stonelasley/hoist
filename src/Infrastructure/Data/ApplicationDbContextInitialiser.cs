@@ -95,6 +95,23 @@ public class ApplicationDbContextInitialiser
             }
         }
 
+        // Default test user (non-admin, email confirmed)
+        var testUser = new ApplicationUser
+        {
+            UserName = "test@test.com",
+            Email = "test@test.com",
+            FirstName = "Test",
+            LastName = "User"
+        };
+
+        if (_userManager.Users.All(u => u.UserName != testUser.UserName))
+        {
+            await _userManager.CreateAsync(testUser, "Test1234!");
+
+            var testToken = await _userManager.GenerateEmailConfirmationTokenAsync(testUser);
+            await _userManager.ConfirmEmailAsync(testUser, testToken);
+        }
+
         // Default data
         // Seed, if necessary
         if (!_context.TodoLists.Any())
