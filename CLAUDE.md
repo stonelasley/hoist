@@ -80,3 +80,10 @@ The app reads `ConnectionStrings:HoistDb`. When run via Aspire (`src/AppHost`), 
 ## Database Initialization
 
 In development, `ApplicationDbContextInitialiser` drops and recreates the database on startup, then seeds default roles, an admin user (`administrator@localhost` / `Administrator1!`), and sample data. Init failures are logged but don't crash the app (allows NSwag and non-DB workflows to proceed).
+
+## Active Technologies
+- C# / .NET 10.0 (backend), TypeScript 5.9 / React Native 0.81 (mobile) + ASP.NET Core Identity, MediatR, FluentValidation, EF Core 10 (backend); Expo SDK 54, expo-router 6, expo-auth-session, expo-secure-store (mobile) (001-auth-login-registration)
+- SQL Server via EF Core (Aspire-orchestrated container in dev, Testcontainers in tests) (001-auth-login-registration)
+
+## Recent Changes
+- 001-auth-login-registration: Added C# / .NET 10.0 (backend), TypeScript 5.9 / React Native 0.81 (mobile) + ASP.NET Core Identity, MediatR, FluentValidation, EF Core 10 (backend); Expo SDK 54, expo-router 6, expo-auth-session, expo-secure-store (mobile)

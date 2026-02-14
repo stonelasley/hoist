@@ -3,10 +3,12 @@ using Hoist.Domain.Constants;
 using Hoist.Infrastructure.Data;
 using Hoist.Infrastructure.Data.Interceptors;
 using Hoist.Infrastructure.Identity;
+using Hoist.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -28,6 +30,10 @@ public static class DependencyInjection
             options.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
         });
 
+        builder.EnrichSqlServerDbContext<ApplicationDbContext>(settings =>
+        {
+            settings.DisableHealthChecks = true;
+        });
 
         builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
@@ -42,10 +48,39 @@ public static class DependencyInjection
             .AddIdentityCore<ApplicationUser>()
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddApiEndpoints();
+            .AddApiEndpoints()
+            .AddDefaultTokenProviders();
+
+        builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+        {
+            options.TokenLifespan = TimeSpan.FromHours(48);
+        });
+
+        builder.Services.Configure<IdentityOptions>(options =>
+        {
+            // Password requirements
+            options.Password.RequiredLength = 8;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireDigit = true;
+            options.Password.RequireNonAlphanumeric = true;
+
+            // Sign-in requirements
+            options.SignIn.RequireConfirmedEmail = true;
+        });
 
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddTransient<IIdentityService, IdentityService>();
+
+        var sendGridApiKey = builder.Configuration["SendGrid:ApiKey"];
+        if (!string.IsNullOrEmpty(sendGridApiKey) && !sendGridApiKey.StartsWith("<"))
+        {
+            builder.Services.AddTransient<IEmailSender, SendGridEmailSender>();
+        }
+        else
+        {
+            builder.Services.AddTransient<IEmailSender, ConsoleEmailSender>();
+        }
 
         builder.Services.AddAuthorization(options =>
             options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator)));

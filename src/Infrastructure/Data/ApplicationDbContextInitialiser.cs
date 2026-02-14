@@ -73,15 +73,43 @@ public class ApplicationDbContextInitialiser
         }
 
         // Default users
-        var administrator = new ApplicationUser { UserName = "administrator@localhost", Email = "administrator@localhost" };
+        var administrator = new ApplicationUser
+        {
+            UserName = "administrator@localhost",
+            Email = "administrator@localhost",
+            FirstName = "Admin",
+            LastName = "User"
+        };
 
         if (_userManager.Users.All(u => u.UserName != administrator.UserName))
         {
             await _userManager.CreateAsync(administrator, "Administrator1!");
+
+            // Confirm email so the admin can log in with RequireConfirmedEmail enabled
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(administrator);
+            await _userManager.ConfirmEmailAsync(administrator, token);
+
             if (!string.IsNullOrWhiteSpace(administratorRole.Name))
             {
                 await _userManager.AddToRolesAsync(administrator, new [] { administratorRole.Name });
             }
+        }
+
+        // Default test user (non-admin, email confirmed)
+        var testUser = new ApplicationUser
+        {
+            UserName = "test@test.com",
+            Email = "test@test.com",
+            FirstName = "Test",
+            LastName = "User"
+        };
+
+        if (_userManager.Users.All(u => u.UserName != testUser.UserName))
+        {
+            await _userManager.CreateAsync(testUser, "Test1234!");
+
+            var testToken = await _userManager.GenerateEmailConfirmationTokenAsync(testUser);
+            await _userManager.ConfirmEmailAsync(testUser, testToken);
         }
 
         // Default data

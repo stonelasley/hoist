@@ -1,6 +1,0 @@
-{
-  "Hoist.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/st1\/Projects\/st1\/hoist\/src\/Application",
-  "Hoist.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/st1\/Projects\/st1\/hoist\/src\/Domain",
-  "Hoist.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/st1\/Projects\/st1\/hoist\/src\/Infrastructure",
-  "Hoist.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/st1\/Projects\/st1\/hoist\/src\/Web"
-}

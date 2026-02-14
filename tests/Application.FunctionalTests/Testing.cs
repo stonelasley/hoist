@@ -70,7 +70,13 @@ public partial class Testing
 
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-        var user = new ApplicationUser { UserName = userName, Email = userName };
+        var user = new ApplicationUser
+        {
+            UserName = userName,
+            Email = userName,
+            FirstName = "Test",
+            LastName = "User"
+        };
 
         var result = await userManager.CreateAsync(user, password);
 
