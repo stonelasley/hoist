@@ -35,6 +35,8 @@ public class IdentityService : IIdentityService
         {
             UserName = userName,
             Email = userName,
+            FirstName = string.Empty,
+            LastName = string.Empty
         };
 
         var result = await _userManager.CreateAsync(user, password);
@@ -77,5 +79,131 @@ public class IdentityService : IIdentityService
         var result = await _userManager.DeleteAsync(user);
 
         return result.ToApplicationResult();
+    }
+
+    public async Task<string?> FindUserByEmailAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        return user?.Id;
+    }
+
+    public async Task<bool> CheckPasswordAsync(string userId, string password)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) return false;
+
+        return await _userManager.CheckPasswordAsync(user, password);
+    }
+
+    public async Task<bool> IsEmailConfirmedAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) return false;
+
+        return user.EmailConfirmed;
+    }
+
+    public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        Guard.Against.NotFound(userId, user);
+
+        return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+    }
+
+    public async Task<Result> ConfirmEmailAsync(string userId, string token)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) return Result.Failure(new[] { "User not found" });
+
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+        return result.ToApplicationResult();
+    }
+
+    public async Task<(Result Result, string UserId)> CreateUserWithDetailsAsync(string firstName, string lastName, string email, string password, int? age = null)
+    {
+        var user = new ApplicationUser
+        {
+            FirstName = firstName,
+            LastName = lastName,
+            Email = email,
+            UserName = email,
+            Age = age
+        };
+
+        var result = await _userManager.CreateAsync(user, password);
+
+        return (result.ToApplicationResult(), user.Id);
+    }
+
+    public async Task<(Result Result, string UserId)> CreateGoogleUserAsync(string firstName, string lastName, string email, string googleId)
+    {
+        var user = new ApplicationUser
+        {
+            FirstName = firstName,
+            LastName = lastName,
+            Email = email,
+            UserName = email,
+            EmailConfirmed = true
+        };
+
+        var result = await _userManager.CreateAsync(user);
+
+        if (result.Succeeded)
+        {
+            var loginInfo = new UserLoginInfo("Google", googleId, "Google");
+            await _userManager.AddLoginAsync(user, loginInfo);
+        }
+
+        return (result.ToApplicationResult(), user.Id);
+    }
+
+    public async Task AddGoogleLoginAsync(string userId, string googleId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        Guard.Against.NotFound(userId, user);
+
+        var loginInfo = new UserLoginInfo("Google", googleId, "Google");
+        await _userManager.AddLoginAsync(user, loginInfo);
+    }
+
+    public async Task<string?> FindUserByGoogleIdAsync(string googleId)
+    {
+        var user = await _userManager.FindByLoginAsync("Google", googleId);
+        return user?.Id;
+    }
+
+    public async Task<bool> HasPasswordAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) return false;
+
+        return await _userManager.HasPasswordAsync(user);
+    }
+
+    public async Task<string> GeneratePasswordResetTokenAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        Guard.Against.NotFound(userId, user);
+
+        return await _userManager.GeneratePasswordResetTokenAsync(user);
+    }
+
+    public async Task<Result> ResetPasswordAsync(string userId, string token, string newPassword)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) return Result.Failure(new[] { "User not found" });
+
+        var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+        return result.ToApplicationResult();
+    }
+
+    public async Task<bool> HasGoogleLoginAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) return false;
+
+        var logins = await _userManager.GetLoginsAsync(user);
+        return logins.Any(l => l.LoginProvider == "Google");
     }
 }
