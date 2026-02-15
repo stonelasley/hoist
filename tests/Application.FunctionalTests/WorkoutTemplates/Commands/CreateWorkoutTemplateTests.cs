@@ -16,8 +16,7 @@ public class CreateWorkoutTemplateTests : BaseTestFixture
         var command = new CreateWorkoutTemplateCommand
         {
             Name = "Push Day",
-            Notes = "Focus on chest and triceps",
-            Location = "Gold's Gym"
+            Notes = "Focus on chest and triceps"
         };
 
         var workoutId = await SendAsync(command);
@@ -28,7 +27,6 @@ public class CreateWorkoutTemplateTests : BaseTestFixture
         workout!.Id.ShouldBe(workoutId);
         workout.Name.ShouldBe(command.Name);
         workout.Notes.ShouldBe(command.Notes);
-        workout.Location.ShouldBe(command.Location);
         workout.UserId.ShouldBe(userId);
         workout.CreatedBy.ShouldBe(userId);
         workout.Created.ShouldBe(DateTime.Now, TimeSpan.FromMilliseconds(10000));
@@ -76,7 +74,7 @@ public class CreateWorkoutTemplateTests : BaseTestFixture
         workout.ShouldNotBeNull();
         workout!.Name.ShouldBe("Pull Day");
         workout.Notes.ShouldBeNull();
-        workout.Location.ShouldBeNull();
+        workout.LocationId.ShouldBeNull();
     }
 
     [Test]
