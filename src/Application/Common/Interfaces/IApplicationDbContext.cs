@@ -8,5 +8,11 @@ public interface IApplicationDbContext
 
     DbSet<TodoItem> TodoItems { get; }
 
+    DbSet<ExerciseTemplate> ExerciseTemplates { get; }
+
+    DbSet<WorkoutTemplate> WorkoutTemplates { get; }
+
+    DbSet<WorkoutTemplateExercise> WorkoutTemplateExercises { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
