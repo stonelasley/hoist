@@ -203,7 +203,7 @@ export default function LoginScreen() {
           <Link href="/(auth)/register" asChild>
             <TouchableOpacity disabled={isLoading} style={styles.registerLink}>
               <Text style={[styles.linkText, { color: colors.icon }]}>
-                Don't have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <Text style={{ color: colors.tint }}>Register</Text>
               </Text>
             </TouchableOpacity>
