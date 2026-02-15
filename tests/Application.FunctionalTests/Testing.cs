@@ -48,7 +48,7 @@ public partial class Testing
     {
         return _userId;
     }
-    
+
     public static List<string>? GetRoles()
     {
         return _roles;
@@ -119,7 +119,7 @@ public partial class Testing
         {
             await _database.ResetAsync();
         }
-        catch (Exception) 
+        catch (Exception)
         {
         }
 

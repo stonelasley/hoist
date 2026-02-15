@@ -5,7 +5,7 @@ using Hoist.Application.Common.Security;
 
 namespace Hoist.Application.Common.Behaviours;
 
-public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> 
+public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
     private readonly IUser _user;
@@ -42,7 +42,7 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
                 {
                     foreach (var role in roles)
                     {
-                        var isInRole = _user.Roles?.Any(x => role == x)??false;
+                        var isInRole = _user.Roles?.Any(x => role == x) ?? false;
                         if (isInRole)
                         {
                             authorized = true;
@@ -75,6 +75,6 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
         }
 
         // User is authorized / authorization not required
-        return await next();
+        return await next(cancellationToken);
     }
 }
