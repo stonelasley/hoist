@@ -70,6 +70,15 @@ public partial class Testing
 
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
+        // Check if user already exists (allows switching back to a previously created user)
+        var existingUser = await userManager.FindByNameAsync(userName);
+        if (existingUser != null)
+        {
+            _userId = existingUser.Id;
+            _roles = roles.ToList();
+            return _userId;
+        }
+
         var user = new ApplicationUser
         {
             UserName = userName,
@@ -146,6 +155,11 @@ public partial class Testing
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         return await context.Set<TEntity>().CountAsync();
+    }
+
+    public static IServiceScopeFactory GetScopeFactory()
+    {
+        return _scopeFactory;
     }
 
     [OneTimeTearDown]
