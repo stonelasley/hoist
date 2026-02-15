@@ -22,6 +22,11 @@ import {
   updateWorkoutTemplateExercises,
 } from '@/services/workout-templates';
 import type { WorkoutTemplateExerciseDto } from '@/services/workout-templates';
+import {
+  getInProgressWorkout,
+  startWorkout,
+  discardWorkout,
+} from '@/services/workouts';
 import LocationPickerModal from '@/components/LocationPickerModal';
 import ExercisePickerModal from '@/components/ExercisePickerModal';
 
@@ -163,6 +168,46 @@ export default function WorkoutTemplateDetailScreen() {
       ];
       return newExercises;
     });
+  };
+
+  const handleStartWorkout = async () => {
+    try {
+      const inProgressWorkout = await getInProgressWorkout(api);
+
+      if (inProgressWorkout) {
+        Alert.alert(
+          'Workout In Progress',
+          'You have an in-progress workout. Would you like to resume or discard it?',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            {
+              text: 'Resume',
+              onPress: () => router.push('/(app)/workouts/active'),
+            },
+            {
+              text: 'Discard',
+              style: 'destructive',
+              onPress: async () => {
+                try {
+                  await discardWorkout(api, inProgressWorkout.id);
+                  const newWorkoutId = await startWorkout(api, parseInt(id!, 10));
+                  router.push('/(app)/workouts/active');
+                } catch (err) {
+                  const message = err instanceof Error ? err.message : 'Failed to start workout.';
+                  Alert.alert('Error', message);
+                }
+              },
+            },
+          ],
+        );
+      } else {
+        const newWorkoutId = await startWorkout(api, parseInt(id!, 10));
+        router.push('/(app)/workouts/active');
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to start workout.';
+      Alert.alert('Error', message);
+    }
   };
 
   if (isLoading) {
@@ -313,6 +358,14 @@ export default function WorkoutTemplateDetailScreen() {
             ))
           )}
         </View>
+
+        <TouchableOpacity
+          style={[styles.startWorkoutButton, { backgroundColor: colors.tint }]}
+          onPress={handleStartWorkout}
+          disabled={isSaving}
+        >
+          <Text style={styles.startWorkoutButtonText}>Start Workout</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={[
@@ -478,6 +531,18 @@ const styles = StyleSheet.create({
     color: '#ef4444',
     fontSize: 13,
     fontWeight: '500',
+  },
+  startWorkoutButton: {
+    height: 52,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  startWorkoutButtonText: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: '700',
   },
   saveButton: {
     height: 48,

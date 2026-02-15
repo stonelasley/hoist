@@ -13,12 +13,16 @@ import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import WorkoutTemplateList from '@/components/WorkoutTemplateList';
 import ExerciseTemplateList from '@/components/ExerciseTemplateList';
+import { RecentWorkoutsList } from '@/components/RecentWorkoutsList';
+import { InProgressWorkoutBanner } from '@/components/InProgressWorkoutBanner';
 import { getWorkoutTemplates } from '@/services/workout-templates';
 import { getExerciseTemplates } from '@/services/exercise-templates';
 import { getLocations } from '@/services/locations';
+import { getInProgressWorkout, getRecentWorkouts } from '@/services/workouts';
 import type { WorkoutTemplateBriefDto } from '@/services/workout-templates';
 import type { ExerciseTemplateBriefDto } from '@/services/exercise-templates';
 import type { LocationDto } from '@/services/locations';
+import type { WorkoutDetailDto, WorkoutBriefDto } from '@/services/workouts';
 
 export default function LandingPage() {
   const colorScheme = useColorScheme();
@@ -28,6 +32,8 @@ export default function LandingPage() {
   const [workouts, setWorkouts] = useState<WorkoutTemplateBriefDto[]>([]);
   const [exercises, setExercises] = useState<ExerciseTemplateBriefDto[]>([]);
   const [locations, setLocations] = useState<LocationDto[]>([]);
+  const [inProgressWorkout, setInProgressWorkout] = useState<WorkoutDetailDto | null>(null);
+  const [recentWorkouts, setRecentWorkouts] = useState<WorkoutBriefDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [workoutLocationFilter, setWorkoutLocationFilter] = useState<number | null>(null);
   const [exerciseLocationFilter, setExerciseLocationFilter] = useState<number | null>(null);
@@ -35,14 +41,18 @@ export default function LandingPage() {
   const loadData = useCallback(async () => {
     try {
       setIsLoading(true);
-      const [workoutData, exerciseData, locationData] = await Promise.all([
+      const [workoutData, exerciseData, locationData, inProgressData, recentData] = await Promise.all([
         getWorkoutTemplates(api, workoutLocationFilter ?? undefined),
         getExerciseTemplates(api),
         getLocations(api),
+        getInProgressWorkout(api),
+        getRecentWorkouts(api),
       ]);
       setWorkouts(workoutData);
       setExercises(exerciseData);
       setLocations(locationData);
+      setInProgressWorkout(inProgressData);
+      setRecentWorkouts(recentData);
     } catch (err) {
       console.error('Failed to load templates:', err);
     } finally {
@@ -83,6 +93,30 @@ export default function LandingPage() {
           <Text style={[styles.settingsIcon, { color: colors.icon }]}>⚙</Text>
         </TouchableOpacity>
       </View>
+
+      {inProgressWorkout && (
+        <View style={[styles.section, styles.bannerSection]}>
+          <InProgressWorkoutBanner
+            workout={inProgressWorkout}
+            onPress={() => router.push('/(app)/workouts/active')}
+          />
+        </View>
+      )}
+
+      {recentWorkouts.length > 0 && (
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Recent Workouts</Text>
+            <TouchableOpacity onPress={() => router.push('/(app)/workouts/history')}>
+              <Text style={[styles.linkText, { color: colors.tint }]}>View All</Text>
+            </TouchableOpacity>
+          </View>
+          <RecentWorkoutsList
+            workouts={recentWorkouts}
+            onPress={(id) => router.push(`/(app)/workouts/${id}`)}
+          />
+        </View>
+      )}
 
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
@@ -280,5 +314,12 @@ const styles = StyleSheet.create({
   chipText: {
     fontSize: 13,
     fontWeight: '500',
+  },
+  bannerSection: {
+    marginBottom: 16,
+  },
+  linkText: {
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
