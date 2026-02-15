@@ -93,3 +93,4 @@ In development, `ApplicationDbContextInitialiser` drops and recreates the databa
 
 ## Recent Changes
 - 001-auth-login-registration: Added C# / .NET 10.0 (backend), TypeScript 5.9 / React Native 0.81 (mobile) + ASP.NET Core Identity, MediatR, FluentValidation, EF Core 10 (backend); Expo SDK 54, expo-router 6, expo-auth-session, expo-secure-store (mobile)
+- 003-gym-locations: Added Location entity with soft-delete (IsDeleted/DeletedAt), CRUD API + settings screens, LocationPickerModal component, LocationId FK on WorkoutTemplate and ExerciseTemplate (SetNull on delete), location filter chips on landing page and ExercisePickerModal
