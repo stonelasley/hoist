@@ -18,7 +18,9 @@ import {
   IMPLEMENT_TYPES,
   EXERCISE_TYPES,
 } from '@/services/exercise-templates';
+import { getLocations } from '@/services/locations';
 import type { ExerciseTemplateBriefDto } from '@/services/exercise-templates';
+import type { LocationDto } from '@/services/locations';
 
 type Props = {
   visible: boolean;
@@ -38,10 +40,12 @@ export default function ExercisePickerModal({
   const api = useApi();
 
   const [exercises, setExercises] = useState<ExerciseTemplateBriefDto[]>([]);
+  const [locations, setLocations] = useState<LocationDto[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [selectedImplementType, setSelectedImplementType] = useState<string | null>(null);
   const [selectedExerciseType, setSelectedExerciseType] = useState<string | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<number | null>(null);
 
   const loadExercises = useCallback(async () => {
     setIsLoading(true);
@@ -58,11 +62,13 @@ export default function ExercisePickerModal({
   useEffect(() => {
     if (visible) {
       loadExercises();
+      getLocations(api).then(setLocations).catch(console.error);
       setSearchText('');
       setSelectedImplementType(null);
       setSelectedExerciseType(null);
+      setSelectedLocation(null);
     }
-  }, [visible, loadExercises]);
+  }, [visible, loadExercises, api]);
 
   const filteredExercises = useMemo(() => {
     let result = exercises;
@@ -80,8 +86,12 @@ export default function ExercisePickerModal({
       result = result.filter((e) => e.exerciseType === selectedExerciseType);
     }
 
+    if (selectedLocation !== null) {
+      result = result.filter((e) => e.locationId === selectedLocation);
+    }
+
     return result;
-  }, [exercises, searchText, selectedImplementType, selectedExerciseType]);
+  }, [exercises, searchText, selectedImplementType, selectedExerciseType, selectedLocation]);
 
   return (
     <Modal
@@ -192,6 +202,46 @@ export default function ExercisePickerModal({
               </TouchableOpacity>
             ))}
           </ScrollView>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipRow}>
+            <TouchableOpacity
+              style={[
+                styles.chip,
+                !selectedLocation
+                  ? { backgroundColor: colors.tint }
+                  : { backgroundColor: colors.icon + '15' },
+              ]}
+              onPress={() => setSelectedLocation(null)}
+            >
+              <Text
+                style={[styles.chipText, { color: !selectedLocation ? '#fff' : colors.icon }]}
+              >
+                All Locations
+              </Text>
+            </TouchableOpacity>
+            {locations.map((loc) => (
+              <TouchableOpacity
+                key={loc.id}
+                style={[
+                  styles.chip,
+                  selectedLocation === loc.id
+                    ? { backgroundColor: colors.tint }
+                    : { backgroundColor: colors.icon + '15' },
+                ]}
+                onPress={() =>
+                  setSelectedLocation(selectedLocation === loc.id ? null : loc.id)
+                }
+              >
+                <Text
+                  style={[
+                    styles.chipText,
+                    { color: selectedLocation === loc.id ? '#fff' : colors.icon },
+                  ]}
+                >
+                  {loc.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
 
         {isLoading ? (
@@ -222,7 +272,7 @@ export default function ExercisePickerModal({
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
                 <Text style={[styles.emptyText, { color: colors.icon }]}>
-                  {searchText || selectedImplementType || selectedExerciseType
+                  {searchText || selectedImplementType || selectedExerciseType || selectedLocation
                     ? 'No exercises match your filters.'
                     : 'No exercises available.'}
                 </Text>

@@ -20,6 +20,22 @@ export default function AppLayout() {
         name="exercise-templates/[id]"
         options={{ presentation: 'card' }}
       />
+      <Stack.Screen
+        name="settings/index"
+        options={{ presentation: 'card' }}
+      />
+      <Stack.Screen
+        name="settings/locations/index"
+        options={{ presentation: 'card' }}
+      />
+      <Stack.Screen
+        name="settings/locations/create"
+        options={{ presentation: 'card' }}
+      />
+      <Stack.Screen
+        name="settings/locations/[id]"
+        options={{ presentation: 'card' }}
+      />
     </Stack>
   );
 }

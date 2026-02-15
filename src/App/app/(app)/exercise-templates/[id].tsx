@@ -28,6 +28,7 @@ import {
   IMPLEMENT_TYPES,
   EXERCISE_TYPES,
 } from '@/services/exercise-templates';
+import LocationPickerModal from '@/components/LocationPickerModal';
 
 export default function ExerciseTemplateDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -40,6 +41,9 @@ export default function ExerciseTemplateDetailScreen() {
   const [implementTypeIndex, setImplementTypeIndex] = useState<number>(0);
   const [exerciseTypeIndex, setExerciseTypeIndex] = useState<number>(0);
   const [model, setModel] = useState('');
+  const [locationId, setLocationId] = useState<number | null>(null);
+  const [locationName, setLocationName] = useState<string | null>(null);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [imagePath, setImagePath] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -54,6 +58,8 @@ export default function ExerciseTemplateDetailScreen() {
       setName(template.name);
       setModel(template.model ?? '');
       setImagePath(template.imagePath);
+      setLocationId(template.locationId ?? null);
+      setLocationName(template.locationName ?? null);
 
       const implIdx = IMPLEMENT_TYPES.indexOf(
         template.implementType as (typeof IMPLEMENT_TYPES)[number],
@@ -99,6 +105,7 @@ export default function ExerciseTemplateDetailScreen() {
         implementType: implementTypeIndex,
         exerciseType: exerciseTypeIndex,
         model: model.trim() || undefined,
+        locationId: locationId ?? undefined,
       });
       router.back();
     } catch (err: unknown) {
@@ -334,6 +341,17 @@ export default function ExerciseTemplateDetailScreen() {
           editable={!isSaving}
         />
 
+        <Text style={[styles.label, { color: colors.text }]}>Location</Text>
+        <TouchableOpacity
+          style={[styles.input, styles.pickerField, { borderColor: colors.icon + '40' }]}
+          onPress={() => setShowLocationPicker(true)}
+          disabled={isSaving}
+        >
+          <Text style={[styles.pickerFieldText, { color: locationName ? colors.text : colors.icon }]}>
+            {locationName ?? 'Select a location (optional)'}
+          </Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={[
             styles.saveButton,
@@ -362,6 +380,16 @@ export default function ExerciseTemplateDetailScreen() {
           <Text style={[styles.cancelButtonText, { color: colors.icon }]}>Cancel</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      <LocationPickerModal
+        visible={showLocationPicker}
+        onClose={() => setShowLocationPicker(false)}
+        onSelect={(id, name) => {
+          setLocationId(id);
+          setLocationName(name);
+          setShowLocationPicker(false);
+        }}
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -502,6 +530,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cancelButtonText: {
+    fontSize: 16,
+  },
+  pickerField: {
+    justifyContent: 'center',
+  },
+  pickerFieldText: {
     fontSize: 16,
   },
 });

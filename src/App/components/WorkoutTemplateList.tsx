@@ -34,9 +34,9 @@ function WorkoutTemplateItem({
               {item.notes}
             </Text>
           ) : null}
-          {item.location ? (
+          {item.locationName ? (
             <Text style={[styles.cardDetail, { color: colors.icon }]} numberOfLines={1}>
-              {item.location}
+              {item.locationName}
             </Text>
           ) : null}
         </View>

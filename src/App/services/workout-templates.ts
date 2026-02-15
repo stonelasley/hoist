@@ -2,7 +2,8 @@ export type WorkoutTemplateBriefDto = {
   id: number;
   name: string;
   notes: string | null;
-  location: string | null;
+  locationId: number | null;
+  locationName: string | null;
   created: string;
   lastModified: string;
   exerciseCount: number;
@@ -21,7 +22,8 @@ export type WorkoutTemplateDetailDto = {
   id: number;
   name: string;
   notes: string | null;
-  location: string | null;
+  locationId: number | null;
+  locationName: string | null;
   created: string;
   lastModified: string;
   exercises: WorkoutTemplateExerciseDto[];
@@ -30,14 +32,14 @@ export type WorkoutTemplateDetailDto = {
 export type CreateWorkoutTemplateRequest = {
   name: string;
   notes?: string;
-  location?: string;
+  locationId?: number;
 };
 
 export type UpdateWorkoutTemplateRequest = {
   id: number;
   name: string;
   notes?: string;
-  location?: string;
+  locationId?: number;
 };
 
 type Api = {
@@ -49,8 +51,13 @@ type Api = {
 
 export async function getWorkoutTemplates(
   api: Api,
+  locationId?: number,
 ): Promise<WorkoutTemplateBriefDto[]> {
-  return api.get<WorkoutTemplateBriefDto[]>('/api/WorkoutTemplates');
+  const params = new URLSearchParams();
+  if (locationId !== undefined) params.append('locationId', locationId.toString());
+  const query = params.toString();
+  const path = `/api/WorkoutTemplates${query ? `?${query}` : ''}`;
+  return api.get<WorkoutTemplateBriefDto[]>(path);
 }
 
 export async function getWorkoutTemplate(
