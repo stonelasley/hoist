@@ -227,6 +227,6 @@ public class UpdateWorkoutTests : BaseTestFixture
             Notes = "Hacked notes"
         };
 
-        await Should.ThrowAsync<Ardalis.GuardClauses.NotFoundException>(() => SendAsync(command));
+        await Should.ThrowAsync<Application.Common.Exceptions.NotFoundException>(() => SendAsync(command));
     }
 }

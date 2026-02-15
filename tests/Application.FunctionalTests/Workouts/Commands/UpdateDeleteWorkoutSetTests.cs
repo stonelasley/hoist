@@ -241,6 +241,6 @@ public class UpdateDeleteWorkoutSetTests : BaseTestFixture
             WeightUnit = "Lbs"
         };
 
-        await Should.ThrowAsync<Ardalis.GuardClauses.NotFoundException>(() => SendAsync(updateCommand));
+        await Should.ThrowAsync<Application.Common.Exceptions.NotFoundException>(() => SendAsync(updateCommand));
     }
 }

@@ -153,6 +153,6 @@ public class StartWorkoutTests : BaseTestFixture
 
         var command = new StartWorkoutCommand { WorkoutTemplateId = 99999 };
 
-        await Should.ThrowAsync<Ardalis.GuardClauses.NotFoundException>(() => SendAsync(command));
+        await Should.ThrowAsync<Application.Common.Exceptions.NotFoundException>(() => SendAsync(command));
     }
 }
