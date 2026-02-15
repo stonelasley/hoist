@@ -16,5 +16,13 @@ public interface IApplicationDbContext
 
     DbSet<Location> Locations { get; }
 
+    DbSet<Workout> Workouts { get; }
+
+    DbSet<WorkoutExercise> WorkoutExercises { get; }
+
+    DbSet<WorkoutSet> WorkoutSets { get; }
+
+    DbSet<Domain.Entities.UserPreferences> UserPreferences { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

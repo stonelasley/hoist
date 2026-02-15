@@ -23,6 +23,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 
     public DbSet<Location> Locations => Set<Location>();
 
+    public DbSet<Workout> Workouts => Set<Workout>();
+
+    public DbSet<WorkoutExercise> WorkoutExercises => Set<WorkoutExercise>();
+
+    public DbSet<WorkoutSet> WorkoutSets => Set<WorkoutSet>();
+
+    public DbSet<UserPreferences> UserPreferences => Set<UserPreferences>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
