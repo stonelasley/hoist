@@ -16,13 +16,18 @@ public class ExerciseTemplateBriefDto
 
     public string? Model { get; init; }
 
+    public int? LocationId { get; init; }
+
+    public string? LocationName { get; init; }
+
     private class Mapping : Profile
     {
         public Mapping()
         {
             CreateMap<ExerciseTemplate, ExerciseTemplateBriefDto>()
                 .ForMember(d => d.ImplementType, opt => opt.MapFrom(s => s.ImplementType.ToString()))
-                .ForMember(d => d.ExerciseType, opt => opt.MapFrom(s => s.ExerciseType.ToString()));
+                .ForMember(d => d.ExerciseType, opt => opt.MapFrom(s => s.ExerciseType.ToString()))
+                .ForMember(d => d.LocationName, opt => opt.MapFrom(s => s.Location != null ? s.Location.Name : null));
         }
     }
 }

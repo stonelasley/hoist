@@ -14,6 +14,8 @@ public record UpdateExerciseTemplateCommand : IRequest
     public ExerciseType ExerciseType { get; init; }
 
     public string? Model { get; init; }
+
+    public int? LocationId { get; init; }
 }
 
 public class UpdateExerciseTemplateCommandHandler : IRequestHandler<UpdateExerciseTemplateCommand>
@@ -40,6 +42,7 @@ public class UpdateExerciseTemplateCommandHandler : IRequestHandler<UpdateExerci
         entity.ImplementType = request.ImplementType;
         entity.ExerciseType = request.ExerciseType;
         entity.Model = request.Model;
+        entity.LocationId = request.LocationId;
 
         await _context.SaveChangesAsync(cancellationToken);
     }

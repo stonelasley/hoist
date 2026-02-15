@@ -13,6 +13,8 @@ public record CreateExerciseTemplateCommand : IRequest<int>
     public ExerciseType ExerciseType { get; init; }
 
     public string? Model { get; init; }
+
+    public int? LocationId { get; init; }
 }
 
 public class CreateExerciseTemplateCommandHandler : IRequestHandler<CreateExerciseTemplateCommand, int>
@@ -34,7 +36,8 @@ public class CreateExerciseTemplateCommandHandler : IRequestHandler<CreateExerci
             ImplementType = request.ImplementType,
             ExerciseType = request.ExerciseType,
             Model = request.Model,
-            UserId = _user.Id!
+            UserId = _user.Id!,
+            LocationId = request.LocationId
         };
 
         _context.ExerciseTemplates.Add(entity);
