@@ -84,6 +84,8 @@ In development, `ApplicationDbContextInitialiser` drops and recreates the databa
 ## Active Technologies
 - C# / .NET 10.0 (backend), TypeScript 5.9 / React Native 0.81 (mobile) + ASP.NET Core Identity, MediatR, FluentValidation, EF Core 10 (backend); Expo SDK 54, expo-router 6, expo-auth-session, expo-secure-store (mobile) (001-auth-login-registration)
 - SQL Server via EF Core (Aspire-orchestrated container in dev, Testcontainers in tests) (001-auth-login-registration)
+- C# / .NET 10.0 (backend), TypeScript 5.9 / React Native 0.81 (mobile) + ASP.NET Core Identity, MediatR, FluentValidation, EF Core 10, AutoMapper (backend); Expo SDK 54, expo-router 6, React 19 (mobile) (002-workout-exercise-templates)
+- SQL Server via EF Core (Aspire-orchestrated container in dev, Testcontainers in tests); local filesystem for exercise images (002-workout-exercise-templates)
 
 ## Recent Changes
 - 001-auth-login-registration: Added C# / .NET 10.0 (backend), TypeScript 5.9 / React Native 0.81 (mobile) + ASP.NET Core Identity, MediatR, FluentValidation, EF Core 10 (backend); Expo SDK 54, expo-router 6, expo-auth-session, expo-secure-store (mobile)

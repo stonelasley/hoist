@@ -1,5 +1,6 @@
 ﻿using Hoist.Domain.Constants;
 using Hoist.Domain.Entities;
+using Hoist.Domain.Enums;
 using Hoist.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -128,6 +129,73 @@ public class ApplicationDbContextInitialiser
                 }
             });
 
+            await _context.SaveChangesAsync();
+        }
+
+        // Seed exercise templates and workout templates for test user
+        var existingTestUser = await _userManager.FindByEmailAsync("test@test.com");
+        if (existingTestUser != null && !_context.ExerciseTemplates.Any(e => e.UserId == existingTestUser.Id))
+        {
+            var benchPress = new ExerciseTemplate
+            {
+                Name = "Bench Press",
+                ImplementType = ImplementType.Barbell,
+                ExerciseType = ExerciseType.Reps,
+                UserId = existingTestUser.Id,
+                IsDeleted = false
+            };
+
+            var squat = new ExerciseTemplate
+            {
+                Name = "Squat",
+                ImplementType = ImplementType.Barbell,
+                ExerciseType = ExerciseType.Reps,
+                UserId = existingTestUser.Id,
+                IsDeleted = false
+            };
+
+            var running = new ExerciseTemplate
+            {
+                Name = "Running",
+                ImplementType = ImplementType.Bodyweight,
+                ExerciseType = ExerciseType.Distance,
+                UserId = existingTestUser.Id,
+                IsDeleted = false
+            };
+
+            var plank = new ExerciseTemplate
+            {
+                Name = "Plank",
+                ImplementType = ImplementType.Bodyweight,
+                ExerciseType = ExerciseType.Duration,
+                UserId = existingTestUser.Id,
+                IsDeleted = false
+            };
+
+            _context.ExerciseTemplates.AddRange(benchPress, squat, running, plank);
+            await _context.SaveChangesAsync();
+
+            var pushDayWorkout = new WorkoutTemplate
+            {
+                Name = "Push Day",
+                Notes = "Upper body push exercises",
+                UserId = existingTestUser.Id,
+                Exercises = new List<WorkoutTemplateExercise>
+                {
+                    new WorkoutTemplateExercise
+                    {
+                        ExerciseTemplateId = benchPress.Id,
+                        Position = 1
+                    },
+                    new WorkoutTemplateExercise
+                    {
+                        ExerciseTemplateId = squat.Id,
+                        Position = 2
+                    }
+                }
+            };
+
+            _context.WorkoutTemplates.Add(pushDayWorkout);
             await _context.SaveChangesAsync();
         }
     }
