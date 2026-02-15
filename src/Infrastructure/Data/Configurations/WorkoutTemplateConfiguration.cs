@@ -16,9 +16,6 @@ public class WorkoutTemplateConfiguration : IEntityTypeConfiguration<WorkoutTemp
         builder.Property(w => w.Notes)
             .HasMaxLength(2000);
 
-        builder.Property(w => w.Location)
-            .HasMaxLength(200);
-
         builder.Property(w => w.UserId)
             .IsRequired();
 
@@ -27,6 +24,12 @@ public class WorkoutTemplateConfiguration : IEntityTypeConfiguration<WorkoutTemp
             .HasForeignKey(w => w.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasOne(w => w.Location)
+            .WithMany()
+            .HasForeignKey(w => w.LocationId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         builder.HasIndex(w => w.UserId);
+        builder.HasIndex(w => w.LocationId);
     }
 }

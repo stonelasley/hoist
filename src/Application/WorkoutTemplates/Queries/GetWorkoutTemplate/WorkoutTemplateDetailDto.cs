@@ -10,7 +10,9 @@ public class WorkoutTemplateDetailDto
 
     public string? Notes { get; init; }
 
-    public string? Location { get; init; }
+    public int? LocationId { get; init; }
+
+    public string? LocationName { get; init; }
 
     public DateTimeOffset Created { get; init; }
 
@@ -22,7 +24,8 @@ public class WorkoutTemplateDetailDto
     {
         public Mapping()
         {
-            CreateMap<WorkoutTemplate, WorkoutTemplateDetailDto>();
+            CreateMap<WorkoutTemplate, WorkoutTemplateDetailDto>()
+                .ForMember(d => d.LocationName, opt => opt.MapFrom(s => s.Location != null ? s.Location.Name : null));
         }
     }
 }

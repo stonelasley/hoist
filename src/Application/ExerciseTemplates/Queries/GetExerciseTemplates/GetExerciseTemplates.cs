@@ -10,6 +10,8 @@ public record GetExerciseTemplatesQuery : IRequest<List<ExerciseTemplateBriefDto
     public ImplementType? ImplementType { get; init; }
 
     public ExerciseType? ExerciseType { get; init; }
+
+    public int? LocationId { get; init; }
 }
 
 public class GetExerciseTemplatesQueryHandler : IRequestHandler<GetExerciseTemplatesQuery, List<ExerciseTemplateBriefDto>>
@@ -46,6 +48,11 @@ public class GetExerciseTemplatesQueryHandler : IRequestHandler<GetExerciseTempl
         if (request.ExerciseType.HasValue)
         {
             query = query.Where(x => x.ExerciseType == request.ExerciseType.Value);
+        }
+
+        if (request.LocationId.HasValue)
+        {
+            query = query.Where(x => x.LocationId == request.LocationId.Value);
         }
 
         return await query

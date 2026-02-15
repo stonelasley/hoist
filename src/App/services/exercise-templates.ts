@@ -5,6 +5,8 @@ export type ExerciseTemplateBriefDto = {
   exerciseType: string;
   imagePath: string | null;
   model: string | null;
+  locationId: number | null;
+  locationName: string | null;
 };
 
 export type ExerciseTemplateDetailDto = ExerciseTemplateBriefDto & {
@@ -17,6 +19,7 @@ export type CreateExerciseTemplateRequest = {
   implementType: number;
   exerciseType: number;
   model?: string;
+  locationId?: number;
 };
 
 export type UpdateExerciseTemplateRequest = {
@@ -25,6 +28,7 @@ export type UpdateExerciseTemplateRequest = {
   implementType: number;
   exerciseType: number;
   model?: string;
+  locationId?: number;
 };
 
 export const IMPLEMENT_TYPES = [

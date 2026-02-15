@@ -2,7 +2,10 @@ using Hoist.Application.Common.Interfaces;
 
 namespace Hoist.Application.WorkoutTemplates.Queries.GetWorkoutTemplates;
 
-public record GetWorkoutTemplatesQuery : IRequest<List<WorkoutTemplateBriefDto>>;
+public record GetWorkoutTemplatesQuery : IRequest<List<WorkoutTemplateBriefDto>>
+{
+    public int? LocationId { get; init; }
+}
 
 public class GetWorkoutTemplatesQueryHandler : IRequestHandler<GetWorkoutTemplatesQuery, List<WorkoutTemplateBriefDto>>
 {
@@ -21,8 +24,15 @@ public class GetWorkoutTemplatesQueryHandler : IRequestHandler<GetWorkoutTemplat
     {
         var userId = _user.Id;
 
-        return await _context.WorkoutTemplates
-            .Where(x => x.UserId == userId)
+        var query = _context.WorkoutTemplates
+            .Where(x => x.UserId == userId);
+
+        if (request.LocationId.HasValue)
+        {
+            query = query.Where(x => x.LocationId == request.LocationId.Value);
+        }
+
+        return await query
             .OrderByDescending(x => x.LastModified)
             .ProjectTo<WorkoutTemplateBriefDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

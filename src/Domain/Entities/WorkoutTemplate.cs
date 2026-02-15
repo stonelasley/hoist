@@ -6,7 +6,9 @@ public class WorkoutTemplate : BaseAuditableEntity
 
     public string? Notes { get; set; }
 
-    public string? Location { get; set; }
+    public int? LocationId { get; set; }
+
+    public Location? Location { get; set; }
 
     public string UserId { get; set; } = string.Empty;
 

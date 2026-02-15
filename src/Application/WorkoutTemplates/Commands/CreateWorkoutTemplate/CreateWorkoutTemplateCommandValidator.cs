@@ -10,8 +10,5 @@ public class CreateWorkoutTemplateCommandValidator : AbstractValidator<CreateWor
 
         RuleFor(v => v.Notes)
             .MaximumLength(2000);
-
-        RuleFor(v => v.Location)
-            .MaximumLength(200);
     }
 }

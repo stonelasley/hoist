@@ -10,7 +10,7 @@ public record UpdateWorkoutTemplateCommand : IRequest
 
     public string? Notes { get; init; }
 
-    public string? Location { get; init; }
+    public int? LocationId { get; init; }
 }
 
 public class UpdateWorkoutTemplateCommandHandler : IRequestHandler<UpdateWorkoutTemplateCommand>
@@ -35,7 +35,7 @@ public class UpdateWorkoutTemplateCommandHandler : IRequestHandler<UpdateWorkout
 
         entity.Name = request.Name!;
         entity.Notes = request.Notes;
-        entity.Location = request.Location;
+        entity.LocationId = request.LocationId;
 
         await _context.SaveChangesAsync(cancellationToken);
     }

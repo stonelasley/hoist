@@ -15,6 +15,7 @@ import { useApi } from '@/hooks/useApi';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { createWorkoutTemplate } from '@/services/workout-templates';
+import LocationPickerModal from '@/components/LocationPickerModal';
 
 export default function CreateWorkoutTemplateScreen() {
   const colorScheme = useColorScheme();
@@ -23,7 +24,9 @@ export default function CreateWorkoutTemplateScreen() {
 
   const [name, setName] = useState('');
   const [notes, setNotes] = useState('');
-  const [location, setLocation] = useState('');
+  const [locationId, setLocationId] = useState<number | null>(null);
+  const [locationName, setLocationName] = useState<string | null>(null);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,7 +44,7 @@ export default function CreateWorkoutTemplateScreen() {
       await createWorkoutTemplate(api, {
         name: trimmedName,
         notes: notes.trim() || undefined,
-        location: location.trim() || undefined,
+        locationId: locationId ?? undefined,
       });
       router.back();
     } catch (err: unknown) {
@@ -94,15 +97,15 @@ export default function CreateWorkoutTemplateScreen() {
         />
 
         <Text style={[styles.label, { color: colors.text }]}>Location</Text>
-        <TextInput
-          style={[styles.input, { color: colors.text, borderColor: colors.icon + '40' }]}
-          placeholder="e.g. Home Gym, Planet Fitness"
-          placeholderTextColor={colors.icon}
-          value={location}
-          onChangeText={setLocation}
-          autoCapitalize="words"
-          editable={!isSaving}
-        />
+        <TouchableOpacity
+          style={[styles.input, styles.pickerField, { borderColor: colors.icon + '40' }]}
+          onPress={() => setShowLocationPicker(true)}
+          disabled={isSaving}
+        >
+          <Text style={[styles.pickerFieldText, { color: locationName ? colors.text : colors.icon }]}>
+            {locationName ?? 'Select a location (optional)'}
+          </Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={[
@@ -128,6 +131,12 @@ export default function CreateWorkoutTemplateScreen() {
           <Text style={[styles.cancelButtonText, { color: colors.icon }]}>Cancel</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      <LocationPickerModal
+        visible={showLocationPicker}
+        onClose={() => setShowLocationPicker(false)}
+        onSelect={(id, name) => { setLocationId(id); setLocationName(name); }}
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -162,6 +171,12 @@ const styles = StyleSheet.create({
   textArea: {
     height: 100,
     paddingTop: 12,
+  },
+  pickerField: {
+    justifyContent: 'center',
+  },
+  pickerFieldText: {
+    fontSize: 16,
   },
   errorText: {
     color: '#ef4444',

@@ -17,16 +17,14 @@ public class UpdateWorkoutTemplateTests : BaseTestFixture
         var workoutId = await SendAsync(new CreateWorkoutTemplateCommand
         {
             Name = "Push Day",
-            Notes = "Original Notes",
-            Location = "Original Location"
+            Notes = "Original Notes"
         });
 
         var command = new UpdateWorkoutTemplateCommand
         {
             Id = workoutId,
             Name = "Updated Push Day",
-            Notes = "Updated Notes",
-            Location = "Updated Location"
+            Notes = "Updated Notes"
         };
 
         await SendAsync(command);
@@ -37,7 +35,6 @@ public class UpdateWorkoutTemplateTests : BaseTestFixture
         workout!.Id.ShouldBe(workoutId);
         workout.Name.ShouldBe(command.Name);
         workout.Notes.ShouldBe(command.Notes);
-        workout.Location.ShouldBe(command.Location);
         workout.LastModifiedBy.ShouldBe(userId);
         workout.LastModified.ShouldBe(DateTime.Now, TimeSpan.FromMilliseconds(10000));
     }
@@ -151,22 +148,20 @@ public class UpdateWorkoutTemplateTests : BaseTestFixture
         var workoutId = await SendAsync(new CreateWorkoutTemplateCommand
         {
             Name = "Push Day",
-            Notes = "Some notes",
-            Location = "Some location"
+            Notes = "Some notes"
         });
 
         await SendAsync(new UpdateWorkoutTemplateCommand
         {
             Id = workoutId,
             Name = "Push Day",
-            Notes = null,
-            Location = null
+            Notes = null
         });
 
         var workout = await FindAsync<WorkoutTemplate>(workoutId);
 
         workout.ShouldNotBeNull();
         workout!.Notes.ShouldBeNull();
-        workout.Location.ShouldBeNull();
+        workout.LocationId.ShouldBeNull();
     }
 }

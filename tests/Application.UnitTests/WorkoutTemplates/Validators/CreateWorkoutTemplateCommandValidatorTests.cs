@@ -18,8 +18,7 @@ public class CreateWorkoutTemplateCommandValidatorTests
         var command = new CreateWorkoutTemplateCommand
         {
             Name = "",
-            Notes = "Test notes",
-            Location = "Test location"
+            Notes = "Test notes"
         };
         var result = await _validator.ValidateAsync(command);
         result.IsValid.ShouldBeFalse();
@@ -32,8 +31,7 @@ public class CreateWorkoutTemplateCommandValidatorTests
         var command = new CreateWorkoutTemplateCommand
         {
             Name = "   ",
-            Notes = "Test notes",
-            Location = "Test location"
+            Notes = "Test notes"
         };
         var result = await _validator.ValidateAsync(command);
         result.IsValid.ShouldBeFalse();
@@ -46,8 +44,7 @@ public class CreateWorkoutTemplateCommandValidatorTests
         var command = new CreateWorkoutTemplateCommand
         {
             Name = new string('A', 201),
-            Notes = "Test notes",
-            Location = "Test location"
+            Notes = "Test notes"
         };
         var result = await _validator.ValidateAsync(command);
         result.IsValid.ShouldBeFalse();
@@ -60,8 +57,7 @@ public class CreateWorkoutTemplateCommandValidatorTests
         var command = new CreateWorkoutTemplateCommand
         {
             Name = new string('A', 200),
-            Notes = "Test notes",
-            Location = "Test location"
+            Notes = "Test notes"
         };
         var result = await _validator.ValidateAsync(command);
         result.IsValid.ShouldBeTrue();
@@ -73,8 +69,7 @@ public class CreateWorkoutTemplateCommandValidatorTests
         var command = new CreateWorkoutTemplateCommand
         {
             Name = "Test workout",
-            Notes = new string('A', 2001),
-            Location = "Test location"
+            Notes = new string('A', 2001)
         };
         var result = await _validator.ValidateAsync(command);
         result.IsValid.ShouldBeFalse();
@@ -87,35 +82,7 @@ public class CreateWorkoutTemplateCommandValidatorTests
         var command = new CreateWorkoutTemplateCommand
         {
             Name = "Test workout",
-            Notes = new string('A', 2000),
-            Location = "Test location"
-        };
-        var result = await _validator.ValidateAsync(command);
-        result.IsValid.ShouldBeTrue();
-    }
-
-    [Test]
-    public async Task ShouldHaveErrorWhenLocationExceedsMaxLength()
-    {
-        var command = new CreateWorkoutTemplateCommand
-        {
-            Name = "Test workout",
-            Notes = "Test notes",
-            Location = new string('A', 201)
-        };
-        var result = await _validator.ValidateAsync(command);
-        result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Location");
-    }
-
-    [Test]
-    public async Task ShouldPassValidationWhenLocationIsAtMaxLength()
-    {
-        var command = new CreateWorkoutTemplateCommand
-        {
-            Name = "Test workout",
-            Notes = "Test notes",
-            Location = new string('A', 200)
+            Notes = new string('A', 2000)
         };
         var result = await _validator.ValidateAsync(command);
         result.IsValid.ShouldBeTrue();
@@ -127,21 +94,7 @@ public class CreateWorkoutTemplateCommandValidatorTests
         var command = new CreateWorkoutTemplateCommand
         {
             Name = "Test workout",
-            Notes = null,
-            Location = "Test location"
-        };
-        var result = await _validator.ValidateAsync(command);
-        result.IsValid.ShouldBeTrue();
-    }
-
-    [Test]
-    public async Task ShouldPassValidationWhenLocationIsNull()
-    {
-        var command = new CreateWorkoutTemplateCommand
-        {
-            Name = "Test workout",
-            Notes = "Test notes",
-            Location = null
+            Notes = null
         };
         var result = await _validator.ValidateAsync(command);
         result.IsValid.ShouldBeTrue();
@@ -153,8 +106,7 @@ public class CreateWorkoutTemplateCommandValidatorTests
         var command = new CreateWorkoutTemplateCommand
         {
             Name = "Morning Workout",
-            Notes = "Full body workout routine",
-            Location = "Main Gym"
+            Notes = "Full body workout routine"
         };
         var result = await _validator.ValidateAsync(command);
         result.IsValid.ShouldBeTrue();

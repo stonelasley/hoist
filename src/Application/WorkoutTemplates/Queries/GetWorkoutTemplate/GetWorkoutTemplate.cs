@@ -24,6 +24,7 @@ public class GetWorkoutTemplateQueryHandler : IRequestHandler<GetWorkoutTemplate
         var entity = await _context.WorkoutTemplates
             .IgnoreQueryFilters()
             .Where(x => x.Id == request.Id && x.UserId == userId)
+            .Include(x => x.Location)
             .Include(x => x.Exercises.OrderBy(e => e.Position))
                 .ThenInclude(e => e.ExerciseTemplate)
             .FirstOrDefaultAsync(cancellationToken);

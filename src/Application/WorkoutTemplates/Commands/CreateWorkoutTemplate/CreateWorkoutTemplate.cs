@@ -9,7 +9,7 @@ public record CreateWorkoutTemplateCommand : IRequest<int>
 
     public string? Notes { get; init; }
 
-    public string? Location { get; init; }
+    public int? LocationId { get; init; }
 }
 
 public class CreateWorkoutTemplateCommandHandler : IRequestHandler<CreateWorkoutTemplateCommand, int>
@@ -29,7 +29,7 @@ public class CreateWorkoutTemplateCommandHandler : IRequestHandler<CreateWorkout
         {
             Name = request.Name!,
             Notes = request.Notes,
-            Location = request.Location,
+            LocationId = request.LocationId,
             UserId = _user.Id!
         };
 

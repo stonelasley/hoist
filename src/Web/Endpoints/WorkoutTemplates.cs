@@ -20,9 +20,10 @@ public class WorkoutTemplates : EndpointGroupBase
         groupBuilder.MapDelete(DeleteWorkoutTemplate, "{id}").RequireAuthorization();
     }
 
-    public async Task<Ok<List<WorkoutTemplateBriefDto>>> GetWorkoutTemplates(ISender sender)
+    public async Task<Ok<List<WorkoutTemplateBriefDto>>> GetWorkoutTemplates(ISender sender,
+        [AsParameters] GetWorkoutTemplatesQuery query)
     {
-        var result = await sender.Send(new GetWorkoutTemplatesQuery());
+        var result = await sender.Send(query);
 
         return TypedResults.Ok(result);
     }

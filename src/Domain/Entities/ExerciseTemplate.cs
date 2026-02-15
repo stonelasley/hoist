@@ -16,6 +16,10 @@ public class ExerciseTemplate : BaseAuditableEntity
 
     public DateTimeOffset? DeletedAt { get; set; }
 
+    public int? LocationId { get; set; }
+
+    public Location? Location { get; set; }
+
     public string UserId { get; set; } = string.Empty;
 
     public IList<WorkoutTemplateExercise> WorkoutTemplateExercises { get; set; } = new List<WorkoutTemplateExercise>();

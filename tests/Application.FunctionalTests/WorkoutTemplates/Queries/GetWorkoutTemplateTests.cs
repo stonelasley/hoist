@@ -39,8 +39,7 @@ public class GetWorkoutTemplateTests : BaseTestFixture
         var workoutId = await SendAsync(new CreateWorkoutTemplateCommand
         {
             Name = "Push Day",
-            Notes = "Test Notes",
-            Location = "Gym"
+            Notes = "Test Notes"
         });
 
         await SendAsync(new UpdateWorkoutTemplateExercisesCommand
@@ -60,7 +59,6 @@ public class GetWorkoutTemplateTests : BaseTestFixture
         result.Id.ShouldBe(workoutId);
         result.Name.ShouldBe("Push Day");
         result.Notes.ShouldBe("Test Notes");
-        result.Location.ShouldBe("Gym");
         result.Exercises.ShouldNotBeNull();
         result.Exercises.Count.ShouldBe(3);
 

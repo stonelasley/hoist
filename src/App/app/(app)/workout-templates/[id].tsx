@@ -22,6 +22,7 @@ import {
   updateWorkoutTemplateExercises,
 } from '@/services/workout-templates';
 import type { WorkoutTemplateExerciseDto } from '@/services/workout-templates';
+import LocationPickerModal from '@/components/LocationPickerModal';
 import ExercisePickerModal from '@/components/ExercisePickerModal';
 
 export default function WorkoutTemplateDetailScreen() {
@@ -32,10 +33,12 @@ export default function WorkoutTemplateDetailScreen() {
 
   const [name, setName] = useState('');
   const [notes, setNotes] = useState('');
-  const [location, setLocation] = useState('');
+  const [locationId, setLocationId] = useState<number | null>(null);
+  const [locationName, setLocationName] = useState<string | null>(null);
   const [exercises, setExercises] = useState<WorkoutTemplateExerciseDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
 
   const loadTemplate = useCallback(async () => {
@@ -45,7 +48,8 @@ export default function WorkoutTemplateDetailScreen() {
       const template = await getWorkoutTemplate(api, parseInt(id, 10));
       setName(template.name);
       setNotes(template.notes ?? '');
-      setLocation(template.location ?? '');
+      setLocationId(template.locationId ?? null);
+      setLocationName(template.locationName ?? null);
       setExercises(template.exercises);
     } catch (err) {
       console.error('Failed to load workout template:', err);
@@ -76,7 +80,7 @@ export default function WorkoutTemplateDetailScreen() {
         id: templateId,
         name: trimmedName,
         notes: notes.trim() || undefined,
-        location: location.trim() || undefined,
+        locationId: locationId ?? undefined,
       });
 
       await updateWorkoutTemplateExercises(
@@ -209,15 +213,15 @@ export default function WorkoutTemplateDetailScreen() {
         />
 
         <Text style={[styles.label, { color: colors.text }]}>Location</Text>
-        <TextInput
-          style={[styles.input, { color: colors.text, borderColor: colors.icon + '40' }]}
-          placeholder="Optional location"
-          placeholderTextColor={colors.icon}
-          value={location}
-          onChangeText={setLocation}
-          autoCapitalize="words"
-          editable={!isSaving}
-        />
+        <TouchableOpacity
+          style={[styles.input, styles.pickerField, { borderColor: colors.icon + '40' }]}
+          onPress={() => setShowLocationPicker(true)}
+          disabled={isSaving}
+        >
+          <Text style={[styles.pickerFieldText, { color: locationName ? colors.text : colors.icon }]}>
+            {locationName ?? 'Select a location (optional)'}
+          </Text>
+        </TouchableOpacity>
 
         <View style={styles.exercisesSection}>
           <View style={styles.exercisesHeader}>
@@ -339,6 +343,12 @@ export default function WorkoutTemplateDetailScreen() {
         </TouchableOpacity>
       </ScrollView>
 
+      <LocationPickerModal
+        visible={showLocationPicker}
+        onClose={() => setShowLocationPicker(false)}
+        onSelect={(id, name) => { setLocationId(id); setLocationName(name); }}
+      />
+
       <ExercisePickerModal
         visible={showPicker}
         onClose={() => setShowPicker(false)}
@@ -387,6 +397,12 @@ const styles = StyleSheet.create({
   textArea: {
     height: 100,
     paddingTop: 12,
+  },
+  pickerField: {
+    justifyContent: 'center',
+  },
+  pickerFieldText: {
+    fontSize: 16,
   },
   exercisesSection: {
     marginBottom: 24,

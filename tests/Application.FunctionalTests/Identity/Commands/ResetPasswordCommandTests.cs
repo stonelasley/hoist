@@ -189,11 +189,13 @@ public class ResetPasswordCommandTests : BaseTestFixture
         result.Succeeded.ShouldBeTrue();
         result.Errors.ShouldBeEmpty();
 
-        // Verify the password was actually changed
-        var passwordValid = await identityService.CheckPasswordAsync(userId, "NewSecurePassword123!");
+        // Verify the password was actually changed (use fresh scope to avoid stale UserManager cache)
+        using var verifyScope = GetScopeFactory().CreateScope();
+        var verifyIdentityService = verifyScope.ServiceProvider.GetRequiredService<IIdentityService>();
+        var passwordValid = await verifyIdentityService.CheckPasswordAsync(userId, "NewSecurePassword123!");
         passwordValid.ShouldBeTrue();
 
-        var oldPasswordValid = await identityService.CheckPasswordAsync(userId, "OldPassword123!");
+        var oldPasswordValid = await verifyIdentityService.CheckPasswordAsync(userId, "OldPassword123!");
         oldPasswordValid.ShouldBeFalse();
     }
 
