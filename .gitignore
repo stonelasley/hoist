@@ -57,3 +57,7 @@ coverage/
 
 # Playwright MCP
 .playwright-mcp/
+
+# User uploads (keep directory structure, ignore files)
+src/Web/wwwroot/uploads/exercises/*
+!src/Web/wwwroot/uploads/exercises/.gitkeep
