@@ -137,7 +137,7 @@ public class UpdateExerciseTemplateTests : BaseTestFixture
             ExerciseType = ExerciseType.Reps
         };
 
-        await Should.ThrowAsync<NotFoundException>(() => SendAsync(command));
+        await Should.ThrowAsync<Application.Common.Exceptions.NotFoundException>(() => SendAsync(command));
     }
 
     [Test]
@@ -153,6 +153,6 @@ public class UpdateExerciseTemplateTests : BaseTestFixture
             ExerciseType = ExerciseType.Reps
         };
 
-        await Should.ThrowAsync<NotFoundException>(() => SendAsync(command));
+        await Should.ThrowAsync<Application.Common.Exceptions.NotFoundException>(() => SendAsync(command));
     }
 }
