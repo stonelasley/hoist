@@ -13,7 +13,7 @@ public class UpdateTodoListTests : BaseTestFixture
     public async Task ShouldRequireValidTodoListId()
     {
         var command = new UpdateTodoListCommand { Id = 99, Title = "New Title" };
-        await Should.ThrowAsync<Application.Common.Exceptions.NotFoundException>(() => SendAsync(command));
+        await Should.ThrowAsync<Ardalis.GuardClauses.NotFoundException>(() => SendAsync(command));
     }
 
     [Test]

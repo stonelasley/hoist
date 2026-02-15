@@ -170,6 +170,6 @@ public class GetWorkoutTests : BaseTestFixture
 
         var query = new GetWorkoutQuery { Id = 99999 };
 
-        await Should.ThrowAsync<Application.Common.Exceptions.NotFoundException>(() => SendAsync(query));
+        await Should.ThrowAsync<Ardalis.GuardClauses.NotFoundException>(() => SendAsync(query));
     }
 }

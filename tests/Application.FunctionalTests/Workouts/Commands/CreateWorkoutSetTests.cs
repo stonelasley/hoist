@@ -210,7 +210,7 @@ public class CreateWorkoutSetTests : BaseTestFixture
             Reps = 10
         };
 
-        await Should.ThrowAsync<Application.Common.Exceptions.NotFoundException>(() => SendAsync(command));
+        await Should.ThrowAsync<Ardalis.GuardClauses.NotFoundException>(() => SendAsync(command));
     }
 
     [Test]
