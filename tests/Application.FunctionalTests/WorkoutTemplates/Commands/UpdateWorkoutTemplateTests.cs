@@ -95,7 +95,7 @@ public class UpdateWorkoutTemplateTests : BaseTestFixture
             Name = "Updated Name"
         };
 
-        await Should.ThrowAsync<NotFoundException>(() => SendAsync(command));
+        await Should.ThrowAsync<Application.Common.Exceptions.NotFoundException>(() => SendAsync(command));
     }
 
     [Test]
@@ -109,7 +109,7 @@ public class UpdateWorkoutTemplateTests : BaseTestFixture
             Name = "Updated Name"
         };
 
-        await Should.ThrowAsync<NotFoundException>(() => SendAsync(command));
+        await Should.ThrowAsync<Application.Common.Exceptions.NotFoundException>(() => SendAsync(command));
     }
 
     [Test]
