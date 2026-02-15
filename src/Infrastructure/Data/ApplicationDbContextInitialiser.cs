@@ -132,17 +132,39 @@ public class ApplicationDbContextInitialiser
             await _context.SaveChangesAsync();
         }
 
-        // Seed exercise templates and workout templates for test user
+        // Seed exercise templates, workout templates, and locations for test user
         var existingTestUser = await _userManager.FindByEmailAsync("test@test.com");
         if (existingTestUser != null && !_context.ExerciseTemplates.Any(e => e.UserId == existingTestUser.Id))
         {
+            // Seed locations
+            var theRefinery = new Location
+            {
+                Name = "The Refinery",
+                InstagramHandle = "therefinerysc",
+                Notes = "Main gym",
+                UserId = existingTestUser.Id,
+                IsDeleted = false
+            };
+
+            var homeGym = new Location
+            {
+                Name = "Home Gym",
+                Notes = "Garage setup",
+                UserId = existingTestUser.Id,
+                IsDeleted = false
+            };
+
+            _context.Locations.AddRange(theRefinery, homeGym);
+            await _context.SaveChangesAsync();
+
             var benchPress = new ExerciseTemplate
             {
                 Name = "Bench Press",
                 ImplementType = ImplementType.Barbell,
                 ExerciseType = ExerciseType.Reps,
                 UserId = existingTestUser.Id,
-                IsDeleted = false
+                IsDeleted = false,
+                LocationId = theRefinery.Id
             };
 
             var squat = new ExerciseTemplate
@@ -151,7 +173,8 @@ public class ApplicationDbContextInitialiser
                 ImplementType = ImplementType.Barbell,
                 ExerciseType = ExerciseType.Reps,
                 UserId = existingTestUser.Id,
-                IsDeleted = false
+                IsDeleted = false,
+                LocationId = theRefinery.Id
             };
 
             var running = new ExerciseTemplate
@@ -180,6 +203,7 @@ public class ApplicationDbContextInitialiser
                 Name = "Push Day",
                 Notes = "Upper body push exercises",
                 UserId = existingTestUser.Id,
+                LocationId = theRefinery.Id,
                 Exercises = new List<WorkoutTemplateExercise>
                 {
                     new WorkoutTemplateExercise
