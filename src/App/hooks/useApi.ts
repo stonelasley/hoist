@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { API_BASE_URL } from '@/constants/api';
 
@@ -11,11 +12,11 @@ type ApiMethods = {
 export function useApi(): ApiMethods {
   const { accessToken } = useAuth();
 
-  async function makeRequest<T>(
+  const makeRequest = useCallback(async <T>(
     path: string,
     method: string,
     body?: unknown
-  ): Promise<T> {
+  ): Promise<T> => {
     const headers: HeadersInit = {};
 
     if (accessToken) {
@@ -37,18 +38,19 @@ export function useApi(): ApiMethods {
       throw error;
     }
 
-    // Handle 204 No Content
-    if (response.status === 204) {
+    // Handle empty responses (204 No Content, or 200 with no body)
+    const text = await response.text();
+    if (!text) {
       return undefined as T;
     }
 
-    return response.json();
-  }
+    return JSON.parse(text);
+  }, [accessToken]);
 
-  return {
+  return useMemo(() => ({
     get: <T>(path: string) => makeRequest<T>(path, 'GET'),
     post: <T>(path: string, body?: unknown) => makeRequest<T>(path, 'POST', body),
     put: <T>(path: string, body?: unknown) => makeRequest<T>(path, 'PUT', body),
     del: <T>(path: string) => makeRequest<T>(path, 'DELETE'),
-  };
+  }), [makeRequest]);
 }
