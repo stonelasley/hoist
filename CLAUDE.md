@@ -15,6 +15,10 @@ dotnet watch run --project src/Web      # Run Web directly with hot reload (need
 
 **NSwag note:** The post-build NSwag step generates `src/Web/wwwroot/api/specification.json` by booting the ASP.NET host. It produces warnings when no SQL Server is available — this is expected and does not fail the build.
 
+## Formatting
+
+Always run `dotnet format` before completing a development task to ensure consistent code style across the solution.
+
 ## Code Scaffolding
 
 From `src/Application/`:
