@@ -1,22 +1,15 @@
 <!--
 Sync Impact Report
 ===================
-Version change: 1.0.0 → 1.1.0 (MINOR — new principle VIII added,
-Technology & Architecture Constraints materially expanded)
+Version change: 1.1.0 → 1.2.0 (MINOR — Principle VI clarified)
 Modified principles:
-  - IV: "API-First with Minimal APIs" → renamed to
-    "API-First with Minimal APIs" (unchanged, but scope note added
-    clarifying it governs the backend only)
-Added sections:
-  - Principle VIII: Mobile-First with Expo React Native
-  - Technology & Architecture Constraints → Mobile Client subsection
+  - VI: Clarified workout edit policy — "edits create new versions"
+    replaced with "in-place edits permitted, tracked via audit fields."
+    Rationale: Full version history is over-engineering (Principle VII);
+    BaseAuditableEntity audit trail provides sufficient traceability.
+Added sections: None
 Removed sections: None
-Templates requiring updates:
-  - .specify/templates/plan-template.md ✅ no changes needed (generic)
-  - .specify/templates/spec-template.md ✅ no changes needed (generic)
-  - .specify/templates/tasks-template.md ✅ no changes needed (generic)
-  - .specify/templates/checklist-template.md ✅ no changes needed (generic)
-  - .specify/templates/agent-file-template.md ✅ no changes needed (generic)
+Templates requiring updates: None
 Follow-up TODOs: None
 -->
 
@@ -91,8 +84,9 @@ progress pictures, and stats.
 
 - Exercise data MUST be accurate and follow established fitness
   taxonomy (muscle groups, movement patterns, equipment types).
-- Workout history is append-only from the user's perspective — edits
-  create new versions, never silently overwrite.
+- Workout history is append-only from the user's perspective — completed
+  workouts are never deleted. In-place edits are permitted and tracked
+  via BaseAuditableEntity audit fields (LastModified, LastModifiedBy).
 - User progress data (body measurements, PRs, photos) MUST be treated
   as private by default. Sharing requires explicit user action.
 
@@ -208,4 +202,4 @@ these principles.
   table with justification and rejected simpler alternatives.
 - **Compliance review** occurs during `/speckit.analyze` and code review.
 
-**Version**: 1.1.0 | **Ratified**: 2026-02-07 | **Last Amended**: 2026-02-14
+**Version**: 1.2.0 | **Ratified**: 2026-02-07 | **Last Amended**: 2026-02-15
