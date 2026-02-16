@@ -41,18 +41,23 @@ export default function LandingPage() {
   const loadData = useCallback(async () => {
     try {
       setIsLoading(true);
-      const [workoutData, exerciseData, locationData, inProgressData, recentData] = await Promise.all([
+      const results = await Promise.allSettled([
         getWorkoutTemplates(api, workoutLocationFilter ?? undefined),
         getExerciseTemplates(api),
         getLocations(api),
         getInProgressWorkout(api),
         getRecentWorkouts(api),
       ]);
-      setWorkouts(workoutData);
-      setExercises(exerciseData);
-      setLocations(locationData);
-      setInProgressWorkout(inProgressData);
-      setRecentWorkouts(recentData);
+      if (results[0].status === 'fulfilled') setWorkouts(results[0].value);
+      if (results[1].status === 'fulfilled') setExercises(results[1].value);
+      if (results[2].status === 'fulfilled') setLocations(results[2].value);
+      if (results[3].status === 'fulfilled') setInProgressWorkout(results[3].value);
+      if (results[4].status === 'fulfilled') setRecentWorkouts(results[4].value);
+
+      const failures = results.filter((r) => r.status === 'rejected');
+      if (failures.length > 0) {
+        console.error('Some requests failed:', failures.map((f) => (f as PromiseRejectedResult).reason));
+      }
     } catch (err) {
       console.error('Failed to load templates:', err);
     } finally {

@@ -14,6 +14,18 @@ const mockUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
 const mockFetch = jest.fn();
 global.fetch = mockFetch as any;
 
+/** Helper to create a mock Response with both json() and text() */
+function mockResponse(status: number, body?: unknown) {
+  const ok = status >= 200 && status < 300;
+  const text = body !== undefined ? JSON.stringify(body) : '';
+  return {
+    ok,
+    status,
+    json: () => Promise.resolve(body),
+    text: () => Promise.resolve(text),
+  };
+}
+
 describe('useApi hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -32,11 +44,7 @@ describe('useApi hook', () => {
 
   describe('get method', () => {
     it('should make GET request with auth header', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve({ data: 'test data' }),
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(200, { data: 'test data' }));
 
       const { result } = renderHook(() => useApi());
 
@@ -67,11 +75,7 @@ describe('useApi hook', () => {
         clearTokens: jest.fn(),
       });
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve({ data: 'public data' }),
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(200, { data: 'public data' }));
 
       const { result } = renderHook(() => useApi());
 
@@ -94,11 +98,7 @@ describe('useApi hook', () => {
 
   describe('post method', () => {
     it('should make POST request with body and auth header', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve({ success: true }),
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(200, { success: true }));
 
       const { result } = renderHook(() => useApi());
 
@@ -124,10 +124,7 @@ describe('useApi hook', () => {
     });
 
     it('should make POST request without body', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 204,
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(204));
 
       const { result } = renderHook(() => useApi());
 
@@ -152,11 +149,7 @@ describe('useApi hook', () => {
 
   describe('put method', () => {
     it('should make PUT request with body and auth header', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve({ updated: true }),
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(200, { updated: true }));
 
       const { result } = renderHook(() => useApi());
 
@@ -184,10 +177,7 @@ describe('useApi hook', () => {
 
   describe('del method', () => {
     it('should make DELETE request with auth header', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 204,
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(204));
 
       const { result } = renderHook(() => useApi());
 
@@ -217,11 +207,7 @@ describe('useApi hook', () => {
         status: 404,
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 404,
-        json: () => Promise.resolve(errorResponse),
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(404, errorResponse));
 
       const { result } = renderHook(() => useApi());
 
@@ -238,11 +224,7 @@ describe('useApi hook', () => {
         status: 401,
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 401,
-        json: () => Promise.resolve(errorResponse),
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(401, errorResponse));
 
       const { result } = renderHook(() => useApi());
 
@@ -263,11 +245,7 @@ describe('useApi hook', () => {
         },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 400,
-        json: () => Promise.resolve(validationError),
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(400, validationError));
 
       const { result } = renderHook(() => useApi());
 
@@ -284,11 +262,7 @@ describe('useApi hook', () => {
         status: 500,
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        json: () => Promise.resolve(serverError),
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(500, serverError));
 
       const { result } = renderHook(() => useApi());
 
@@ -302,10 +276,7 @@ describe('useApi hook', () => {
 
   describe('204 No Content handling', () => {
     it('should return undefined for 204 GET responses', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 204,
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(204));
 
       const { result } = renderHook(() => useApi());
 
@@ -318,10 +289,7 @@ describe('useApi hook', () => {
     });
 
     it('should return undefined for 204 POST responses', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 204,
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(204));
 
       const { result } = renderHook(() => useApi());
 
@@ -334,10 +302,7 @@ describe('useApi hook', () => {
     });
 
     it('should return undefined for 204 DELETE responses', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 204,
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(204));
 
       const { result } = renderHook(() => useApi());
 
@@ -352,11 +317,7 @@ describe('useApi hook', () => {
 
   describe('API base URL', () => {
     it('should construct correct API URLs', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve({}),
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(200, {}));
 
       const { result } = renderHook(() => useApi());
 
@@ -374,11 +335,7 @@ describe('useApi hook', () => {
 
   describe('content type handling', () => {
     it('should set Content-Type header for POST with body', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve({}),
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(200, {}));
 
       const { result } = renderHook(() => useApi());
 
@@ -397,11 +354,7 @@ describe('useApi hook', () => {
     });
 
     it('should set Content-Type header for PUT with body', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve({}),
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(200, {}));
 
       const { result } = renderHook(() => useApi());
 
@@ -420,11 +373,7 @@ describe('useApi hook', () => {
     });
 
     it('should not set Content-Type header for GET', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve({}),
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(200, {}));
 
       const { result } = renderHook(() => useApi());
 
@@ -437,10 +386,7 @@ describe('useApi hook', () => {
     });
 
     it('should not set Content-Type header for DELETE', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 204,
-      });
+      mockFetch.mockResolvedValueOnce(mockResponse(204));
 
       const { result } = renderHook(() => useApi());
 
