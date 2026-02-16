@@ -92,6 +92,9 @@ In development, `ApplicationDbContextInitialiser` drops and recreates the databa
 - SQL Server via EF Core (Aspire-orchestrated container in dev, Testcontainers in tests); local filesystem for exercise images (002-workout-exercise-templates)
 - TypeScript 5.9 / React Native 0.81 / React 19 + Expo SDK 54, expo-router 6, React Navigation 7 (006-auth-route-guard)
 - N/A (no data model changes) (006-auth-route-guard)
+- .NET 10.0 (C#), Node.js (for Expo/React Native frontend) + GitHub Actions, Docker (for Testcontainers SQL Server in tests) (005-ci-github-actions)
+- N/A (CI/CD configuration only) (005-ci-github-actions)
+
 
 ## Recent Changes
 - 001-auth-login-registration: Added C# / .NET 10.0 (backend), TypeScript 5.9 / React Native 0.81 (mobile) + ASP.NET Core Identity, MediatR, FluentValidation, EF Core 10 (backend); Expo SDK 54, expo-router 6, expo-auth-session, expo-secure-store (mobile)

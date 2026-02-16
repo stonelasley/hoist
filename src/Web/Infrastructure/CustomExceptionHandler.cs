@@ -15,6 +15,7 @@ public class CustomExceptionHandler : IExceptionHandler
             {
                 { typeof(Application.Common.Exceptions.ValidationException), HandleValidationException },
                 { typeof(Application.Common.Exceptions.NotFoundException), HandleNotFoundException },
+                { typeof(Ardalis.GuardClauses.NotFoundException), HandleGuardNotFoundException },
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
                 { typeof(Application.Common.Exceptions.ForbiddenAccessException), HandleForbiddenAccessException },
             };
@@ -48,8 +49,16 @@ public class CustomExceptionHandler : IExceptionHandler
 
     private async Task HandleNotFoundException(HttpContext httpContext, Exception ex)
     {
-        var exception = (Application.Common.Exceptions.NotFoundException)ex;
+        await WriteNotFoundResponse(httpContext, ex.Message);
+    }
 
+    private async Task HandleGuardNotFoundException(HttpContext httpContext, Exception ex)
+    {
+        await WriteNotFoundResponse(httpContext, ex.Message);
+    }
+
+    private static async Task WriteNotFoundResponse(HttpContext httpContext, string detail)
+    {
         httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
 
         await httpContext.Response.WriteAsJsonAsync(new ProblemDetails()
@@ -57,7 +66,7 @@ public class CustomExceptionHandler : IExceptionHandler
             Status = StatusCodes.Status404NotFound,
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
             Title = "The specified resource was not found.",
-            Detail = exception.Message
+            Detail = detail
         });
     }
 
