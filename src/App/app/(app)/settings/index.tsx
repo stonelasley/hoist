@@ -32,6 +32,14 @@ export default function SettingsScreen() {
           <Text style={[styles.settingItemText, { color: colors.text }]}>Unit Preferences</Text>
           <Text style={[styles.chevron, { color: colors.icon }]}>›</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.settingItem, { borderColor: colors.icon + '20' }]}
+          onPress={() => router.push('/(app)/settings/appearance')}
+        >
+          <Text style={[styles.settingItemText, { color: colors.text }]}>Appearance</Text>
+          <Text style={[styles.chevron, { color: colors.icon }]}>›</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

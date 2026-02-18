@@ -25,6 +25,10 @@ export default function AppLayout() {
         options={{ presentation: 'card' }}
       />
       <Stack.Screen
+        name="settings/appearance"
+        options={{ presentation: 'card' }}
+      />
+      <Stack.Screen
         name="settings/locations/index"
         options={{ presentation: 'card' }}
       />

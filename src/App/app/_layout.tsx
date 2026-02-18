@@ -7,6 +7,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { AuthProvider, useAuth } from '@/hooks/useAuth';
+import { ThemePreferenceProvider } from '@/hooks/useThemePreference';
 import { Colors } from '@/constants/theme';
 
 function AuthGate() {
@@ -39,7 +40,7 @@ function AuthGate() {
   return <Slot />;
 }
 
-export default function RootLayout() {
+function AppContent() {
   const colorScheme = useColorScheme();
 
   return (
@@ -49,6 +50,14 @@ export default function RootLayout() {
         <StatusBar style="auto" />
       </AuthProvider>
     </ThemeProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <ThemePreferenceProvider>
+      <AppContent />
+    </ThemePreferenceProvider>
   );
 }
 
