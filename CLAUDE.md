@@ -94,6 +94,8 @@ In development, `ApplicationDbContextInitialiser` drops and recreates the databa
 - N/A (no data model changes) (006-auth-route-guard)
 - .NET 10.0 (C#), Node.js (for Expo/React Native frontend) + GitHub Actions, Docker (for Testcontainers SQL Server in tests) (005-ci-github-actions)
 - N/A (CI/CD configuration only) (005-ci-github-actions)
+- TypeScript 5.9 / React Native 0.81 / React 19 + Expo SDK 54, expo-router 6, `@react-native-async-storage/async-storage` (new), React Navigation 7 (007-dark-mode-toggle)
+- AsyncStorage (local device storage for theme preference) (007-dark-mode-toggle)
 
 
 ## Recent Changes
