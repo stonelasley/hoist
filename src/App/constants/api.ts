@@ -1,8 +1,8 @@
 import { Platform } from 'react-native';
 
 const DEV_API_URL = Platform.select({
-  android: 'https://10.0.2.2:5001',
-  default: 'https://localhost:5001',
+  android: 'http://10.0.2.2:5000',
+  default: 'http://localhost:5000',
 });
 
 const PROD_API_URL = 'https://api.hoist.app';

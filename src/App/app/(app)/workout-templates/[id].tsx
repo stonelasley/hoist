@@ -128,15 +128,14 @@ export default function WorkoutTemplateDetailScreen() {
     );
   };
 
-  const handleExerciseSelected = (exerciseId: number) => {
+  const handleExerciseSelected = (exerciseId: number, exercise?: { name: string; implementType: string; exerciseType: string }) => {
     setShowPicker(false);
-    // Add a placeholder exercise entry - the name will be resolved from the server on next load
     const newExercise: WorkoutTemplateExerciseDto = {
       id: 0,
       exerciseTemplateId: exerciseId,
-      exerciseName: 'Loading...',
-      implementType: '',
-      exerciseType: '',
+      exerciseName: exercise?.name ?? 'Loading...',
+      implementType: exercise?.implementType ?? '',
+      exerciseType: exercise?.exerciseType ?? '',
       position: exercises.length,
     };
     setExercises((prev) => [...prev, newExercise]);

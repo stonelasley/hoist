@@ -25,7 +25,7 @@ import type { LocationDto } from '@/services/locations';
 type Props = {
   visible: boolean;
   onClose: () => void;
-  onSelect: (exerciseId: number) => void;
+  onSelect: (exerciseId: number, exercise?: ExerciseTemplateBriefDto) => void;
   onCreateNew: () => void;
 };
 
@@ -255,7 +255,7 @@ export default function ExercisePickerModal({
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={[styles.exerciseRow, { borderColor: colors.icon + '20' }]}
-                onPress={() => onSelect(item.id)}
+                onPress={() => onSelect(item.id, item)}
                 activeOpacity={0.7}
               >
                 <View style={styles.exerciseInfo}>

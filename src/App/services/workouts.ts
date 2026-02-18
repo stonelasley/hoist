@@ -152,7 +152,7 @@ export async function createWorkoutSet(
 ): Promise<number> {
   return api.post<number>(
     `/api/Workouts/${workoutId}/Exercises/${exerciseId}/Sets`,
-    data,
+    { ...data, workoutId, workoutExerciseId: exerciseId },
   );
 }
 

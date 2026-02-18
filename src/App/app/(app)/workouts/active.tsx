@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  FlatList,
   Platform,
   ScrollView,
   StyleSheet,
@@ -60,31 +59,44 @@ export default function ActiveWorkoutScreen() {
   );
 
   const handleDiscardWorkout = () => {
-    Alert.alert(
-      'Discard Workout',
-      'Are you sure you want to discard this workout? All progress will be lost.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Discard',
-          style: 'destructive',
-          onPress: async () => {
-            if (!workout) return;
-            try {
-              await discardWorkout(api, workout.id);
-              router.back();
-            } catch (err) {
-              const message = err instanceof Error ? err.message : 'Failed to discard workout.';
-              Alert.alert('Error', message);
-            }
+    const doDiscard = async () => {
+      if (!workout) return;
+      try {
+        await discardWorkout(api, workout.id);
+        router.replace('/');
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to discard workout.';
+        if (Platform.OS === 'web') {
+          window.alert(message);
+        } else {
+          Alert.alert('Error', message);
+        }
+      }
+    };
+
+    if (Platform.OS === 'web') {
+      if (window.confirm('Are you sure you want to discard this workout? All progress will be lost.')) {
+        doDiscard();
+      }
+    } else {
+      Alert.alert(
+        'Discard Workout',
+        'Are you sure you want to discard this workout? All progress will be lost.',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Discard',
+            style: 'destructive',
+            onPress: doDiscard,
           },
-        },
-      ],
-    );
+        ],
+      );
+    }
   };
 
   const handleCompleteWorkout = () => {
-    Alert.alert('Coming Soon', 'Workout completion will be implemented in a future update.');
+    if (!workout) return;
+    router.push(`/(app)/workouts/complete?id=${workout.id}`);
   };
 
   const handleExerciseSelected = async (exerciseId: number) => {

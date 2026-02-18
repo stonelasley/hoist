@@ -132,10 +132,5 @@ public class CreateWorkoutSetCommandValidator : AbstractValidator<CreateWorkoutS
         RuleFor(v => v.Bodyweight)
             .GreaterThanOrEqualTo(0)
             .When(v => v.Bodyweight.HasValue);
-
-        RuleFor(v => v)
-            .Must(v => v.Weight.HasValue || v.Reps.HasValue || v.Duration.HasValue ||
-                       v.Distance.HasValue || v.Bodyweight.HasValue || !string.IsNullOrEmpty(v.BandColor))
-            .WithMessage("At least one measurement field must be provided");
     }
 }
