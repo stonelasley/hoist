@@ -19,7 +19,7 @@
 
 **Purpose**: Install new dependency required for local preference storage
 
-- [ ] T001 Install `@react-native-async-storage/async-storage` in `src/App/package.json`
+- [x] T001 Install `@react-native-async-storage/async-storage` in `src/App/package.json`
 
 ---
 
@@ -29,11 +29,11 @@
 
 **CRITICAL**: No user story UI work can begin until this phase is complete
 
-- [ ] T002 Create `ThemePreferenceProvider` context and `useThemePreference` hook in `src/App/hooks/useThemePreference.tsx` — follows `useAuth` pattern: exposes `preference` (`'light' | 'dark' | 'system'`), `colorScheme` (`'light' | 'dark'`), and `setPreference`; loads from AsyncStorage on mount with `isLoading` guard; defaults to `'system'`; persists to AsyncStorage on change; validates stored values and falls back to `'system'` on corruption
-- [ ] T003 [P] Modify `src/App/hooks/use-color-scheme.ts` to read resolved `colorScheme` from `ThemePreferenceProvider` context instead of re-exporting React Native's `useColorScheme`
-- [ ] T004 [P] Modify `src/App/hooks/use-color-scheme.web.ts` to read resolved `colorScheme` from `ThemePreferenceProvider` context instead of the current web-specific re-export
-- [ ] T005 Wrap app with `ThemePreferenceProvider` in `src/App/app/_layout.tsx` — place inside `AuthProvider`, before React Navigation `ThemeProvider`; update `ThemeProvider` to use resolved scheme from context; handle loading state
-- [ ] T006 [P] Fix `src/App/components/RatingPicker.tsx` to import `useColorScheme` from `@/hooks/use-color-scheme` instead of directly from `react-native`
+- [x] T002 Create `ThemePreferenceProvider` context and `useThemePreference` hook in `src/App/hooks/useThemePreference.tsx` — follows `useAuth` pattern: exposes `preference` (`'light' | 'dark' | 'system'`), `colorScheme` (`'light' | 'dark'`), and `setPreference`; loads from AsyncStorage on mount with `isLoading` guard; defaults to `'system'`; persists to AsyncStorage on change; validates stored values and falls back to `'system'` on corruption
+- [x] T003 [P] Modify `src/App/hooks/use-color-scheme.ts` to read resolved `colorScheme` from `ThemePreferenceProvider` context instead of re-exporting React Native's `useColorScheme`
+- [x] T004 [P] Modify `src/App/hooks/use-color-scheme.web.ts` to read resolved `colorScheme` from `ThemePreferenceProvider` context instead of the current web-specific re-export
+- [x] T005 Wrap app with `ThemePreferenceProvider` in `src/App/app/_layout.tsx` — place inside `AuthProvider`, before React Navigation `ThemeProvider`; update `ThemeProvider` to use resolved scheme from context; handle loading state
+- [x] T006 [P] Fix `src/App/components/RatingPicker.tsx` to import `useColorScheme` from `@/hooks/use-color-scheme` instead of directly from `react-native`
 
 **Checkpoint**: After this phase, the app should behave identically to before (defaulting to system theme) but the theme is now controlled by the new context provider.
 
@@ -47,8 +47,8 @@
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Add "Appearance" row to the settings list in `src/App/app/(app)/settings/index.tsx` — add a new `TouchableOpacity` row matching existing pattern (text + chevron), navigating to `/(app)/settings/appearance`
-- [ ] T008 [US1] Create appearance selection screen at `src/App/app/(app)/settings/appearance.tsx` — three radio-style options (Light, Dark, System) using the app's existing styling patterns; read current preference and call `setPreference` from `useThemePreference`; selection applies immediately (no save button); current selection shown with visual indicator (checkmark or tint highlight)
+- [x] T007 [US1] Add "Appearance" row to the settings list in `src/App/app/(app)/settings/index.tsx` — add a new `TouchableOpacity` row matching existing pattern (text + chevron), navigating to `/(app)/settings/appearance`
+- [x] T008 [US1] Create appearance selection screen at `src/App/app/(app)/settings/appearance.tsx` — three radio-style options (Light, Dark, System) using the app's existing styling patterns; read current preference and call `setPreference` from `useThemePreference`; selection applies immediately (no save button); current selection shown with visual indicator (checkmark or tint highlight)
 
 **Checkpoint**: User Story 1 is fully functional — user can toggle between appearance modes and see immediate changes.
 
@@ -64,7 +64,7 @@
 
 ### Implementation for User Story 2
 
-- [ ] T009 [US2] Verify persistence and edge case handling in `src/App/hooks/useThemePreference.tsx` — confirm: (1) preference loads from AsyncStorage before first render completes, (2) corrupted/unrecognized stored values fall back to `'system'`, (3) first-time users with no stored value default to `'system'`, (4) real-time system theme changes are reflected when `'system'` is selected
+- [x] T009 [US2] Verify persistence and edge case handling in `src/App/hooks/useThemePreference.tsx` — confirm: (1) preference loads from AsyncStorage before first render completes, (2) corrupted/unrecognized stored values fall back to `'system'`, (3) first-time users with no stored value default to `'system'`, (4) real-time system theme changes are reflected when `'system'` is selected
 
 **Checkpoint**: Both user stories are fully functional and independently testable.
 
@@ -74,8 +74,8 @@
 
 **Purpose**: Final cleanup and validation
 
-- [ ] T010 Run quickstart.md verification steps — test all three modes on iOS/Android/web, verify persistence, check all screens render correctly in both light and dark modes
-- [ ] T011 Run ESLint and fix any linting issues across modified files in `src/App/`
+- [x] T010 Run quickstart.md verification steps — test all three modes on iOS/Android/web, verify persistence, check all screens render correctly in both light and dark modes
+- [x] T011 Run ESLint and fix any linting issues across modified files in `src/App/`
 
 ---
 
